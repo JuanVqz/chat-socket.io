@@ -1,0 +1,3 @@
+#gitignore
+*.swp
+/node_modules
