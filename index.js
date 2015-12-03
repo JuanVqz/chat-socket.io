@@ -9,6 +9,14 @@ app.get('/', function (req, res, next) {
 server.listen(3000);
 console.log('servidor corriendo...');
 
-io.on('connection', function (client){
-	console.log('cliente conectado...');
+io.on('connection', function (socket){
+	console.log('servidor detecta nuevo socket');
+
+	socket.on('join', function (data) {
+		console.log(data);
+	});
+	socket.on('messages', function (message) {
+		socket.emit('broad', message);
+		socket.broadcast.emit('broad', message);
+	});
 });

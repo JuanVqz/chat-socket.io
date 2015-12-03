@@ -2,16 +2,22 @@
 <html lang="es">
 <head>
 	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
 	<title>chat with socket.io and express</title>
 	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css">
 	<style>
 		.sms {
 			background: #E4E4E4;
-			padding: 20px;
+			padding: 5px;
 			border-radius: 5px;
+			height: 10em;
+			width: 100%;
 			margin-bottom: 10px;
 		}
-	</style>
+		li {
+			list-style: none;
+		}
+		</style>
 	<script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.3/jquery.min.js"></script>
 	<script src="/socket.io/socket.io.js"></script>
 </head>
@@ -19,18 +25,31 @@
 	<div class="container">
 
 		<h3 class="text-center">chat socket.io</h3>
-		<div id="mensajes" class="sms"></div>
+		<ul class="sms" id="messages">
+
+		</ul>
 
 		<div class="input-group">
 			<span class="input-group-addon" id="sizing-addon2">Mensaje :</span>
-			<input type="text" class="form-control" placeholder="escribe tu mensaje ...">
+			<input id ="message" type="text" class="form-control" placeholder="escribe tu mensaje ...">
 		</div>
 
 	</div>
 	<script>
-		io.connect();
-		io.on('connection', function (){
-
+		var socket = io.connect();
+		socket.on('connect', function (data){
+			socket.emit('join', 'cliente avisa que llego');
+		});
+		
+		socket.on('broad', function (message){
+			$('#messages').append('<li>'+message+'</li>');
+		});
+	
+		$(document).keypress(function (e) {
+			if(e.which == 13) {
+				var message = $('#message').val();
+				socket.emit('messages', message);
+			}
 		});
 	</script>
 </body>
